@@ -61,14 +61,14 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: 777lotto/UX-foundation.nvim
-          ref: efdf0572e79564bdcb0c43c973bafb7324e9939a
+          ref: 7b8700db546b35e7b6a40b9a41b129354981587f
           path: UX-foundation.nvim
 
       - name: Check out pinned UX Styling
         uses: actions/checkout@v7
         with:
           repository: 777lotto/UX-styling.nvim
-          ref: a7342b42fe1065243ee5c900188aa3b40afa8352
+          ref: d50d273dc386961df96a32b7203f5d4750013428
           path: UX-styling.nvim
 
       - name: Install pinned Neovim
@@ -131,14 +131,14 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: 777lotto/UX-foundation.nvim
-          ref: efdf0572e79564bdcb0c43c973bafb7324e9939a
+          ref: 7b8700db546b35e7b6a40b9a41b129354981587f
           path: UX-foundation.nvim
 
       - name: Check out pinned UX Styling
         uses: actions/checkout@v7
         with:
           repository: 777lotto/UX-styling.nvim
-          ref: a7342b42fe1065243ee5c900188aa3b40afa8352
+          ref: d50d273dc386961df96a32b7203f5d4750013428
           path: UX-styling.nvim
 
       - name: Install pinned Neovim
