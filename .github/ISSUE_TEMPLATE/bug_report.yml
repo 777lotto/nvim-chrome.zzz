@@ -1,0 +1,73 @@
+name: Bug report
+description: Report a reproducible UX Chrome problem
+title: "[Bug]: "
+labels:
+  - "type:bug"
+  - "status:needs-triage"
+body:
+  - type: input
+    id: nvim-version
+    attributes:
+      label: Neovim version
+      placeholder: NVIM v0.12.2
+    validations:
+      required: true
+  - type: input
+    id: revision
+    attributes:
+      label: UX Chrome revision
+      description: Commit SHA or release tag.
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Surface
+      options:
+        - Tabline and buffer tabs
+        - Statusline
+        - Winbar and breadcrumbs
+        - Statuscolumn and folds
+        - Window and split treatment
+        - Scrollbar
+        - Foundation or Styling integration
+        - Setup, teardown, health, or commands
+    validations:
+      required: true
+  - type: textarea
+    id: config
+    attributes:
+      label: Minimal configuration
+      description: Include ownership modes and remove private paths or profile data.
+      render: lua
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and messages
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I reproduced this on the current bet or bluff branch with Neovim 0.12.2.
+          required: true
+        - label: I identified whether the surface was auto, ux, or externally owned.
+          required: true
+        - label: I removed credentials, private paths, and sensitive profile data.
+          required: true

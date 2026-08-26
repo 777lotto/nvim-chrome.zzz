@@ -1,0 +1,50 @@
+name: Feature request
+description: Propose a focused Chrome presentation improvement
+title: "[Feature]: "
+labels:
+  - "type:feature"
+  - "status:needs-triage"
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Buffer tabs or native tab pages
+        - Statusline
+        - Winbar or breadcrumbs
+        - Statuscolumn, signs, or folds
+        - Window or split treatment
+        - Scrollbar or minimap presentation
+        - Ownership or lifecycle
+        - Foundation or Styling integration
+        - Documentation
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: Explain the presentation gap before proposing implementation details.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: fixture
+    attributes:
+      label: Deterministic fixture
+      description: Describe the state, width, rendered text, and highlight spans that expose the change.
+    validations:
+      required: true
+  - type: textarea
+    id: ownership
+    attributes:
+      label: Ownership and rollback
+      description: Explain coexistence, takeover, and exact restoration implications.
+    validations:
+      required: true

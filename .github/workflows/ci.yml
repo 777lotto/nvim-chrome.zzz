@@ -1,0 +1,202 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - bet
+      - bluff
+  pull_request:
+    branches:
+      - bet
+      - bluff
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  promotion-source:
+    name: promotion-source
+    if: github.event_name == 'pull_request' && github.base_ref == 'bet'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Require bluff as the production promotion source
+        env:
+          HEAD_BRANCH: ${{ github.head_ref }}
+        run: |
+          if [[ "$HEAD_BRANCH" != "bluff" ]]; then
+            echo "Pull requests into bet must promote the persistent bluff branch." >&2
+            exit 1
+          fi
+
+  quality:
+    name: quality
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
+
+      - name: Reject whitespace errors
+        run: |
+          if git rev-parse --verify HEAD^ >/dev/null 2>&1; then
+            git diff --check HEAD^ HEAD
+          else
+            git diff-tree --check --no-commit-id --root -r HEAD
+          fi
+
+  linux-smoke:
+    name: linux-smoke (Neovim 0.12.2)
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Check out pinned UX Foundation
+        uses: actions/checkout@v7
+        with:
+          repository: 777lotto/UX-foundation.nvim
+          ref: efdf0572e79564bdcb0c43c973bafb7324e9939a
+          path: UX-foundation.nvim
+
+      - name: Check out pinned UX Styling
+        uses: actions/checkout@v7
+        with:
+          repository: 777lotto/UX-styling.nvim
+          ref: a7342b42fe1065243ee5c900188aa3b40afa8352
+          path: UX-styling.nvim
+
+      - name: Install pinned Neovim
+        env:
+          NVIM_VERSION: v0.12.2
+          NVIM_SHA256: 31cf85945cb600d96cdf69f88bc68bec814acbff50863c5546adef3a1bcef260
+        run: |
+          mkdir --parents "$RUNNER_TEMP/nvim"
+          curl --fail --location --retry 3 \
+            "https://github.com/neovim/neovim/releases/download/$NVIM_VERSION/nvim-linux-x86_64.tar.gz" \
+            --output "$RUNNER_TEMP/nvim.tar.gz"
+          echo "$NVIM_SHA256  $RUNNER_TEMP/nvim.tar.gz" | sha256sum --check --strict
+          tar --extract --gzip --strip-components=1 \
+            --file "$RUNNER_TEMP/nvim.tar.gz" --directory "$RUNNER_TEMP/nvim"
+          echo "$RUNNER_TEMP/nvim/bin" >> "$GITHUB_PATH"
+
+      - name: Compile every Lua file
+        run: nvim --headless --clean -l scripts/check-lua.lua .
+
+      - name: Run unit tests
+        env:
+          UX_CHROME_TEST_FILE: tests/unit.lua
+        run: nvim --headless -u tests/minimal_init.lua -l scripts/run-test.lua
+      - name: Run renderer fixtures
+        env:
+          UX_CHROME_TEST_FILE: tests/render.lua
+        run: nvim --headless -u tests/minimal_init.lua -l scripts/run-test.lua
+
+      - name: Run isolated smoke tests
+        env:
+          UX_CHROME_TEST_FILE: tests/smoke.lua
+        run: nvim --headless -u tests/minimal_init.lua -l scripts/run-test.lua
+
+      - name: Run pinned Foundation integration
+        env:
+          UX_FOUNDATION_ROOT: ${{ github.workspace }}/UX-foundation.nvim
+          UX_CHROME_TEST_FILE: tests/foundation_integration.lua
+        run: nvim --headless -u tests/minimal_init.lua -l scripts/run-test.lua
+
+      - name: Run pinned Styling discovery integration
+        env:
+          UX_FOUNDATION_ROOT: ${{ github.workspace }}/UX-foundation.nvim
+          UX_STYLING_ROOT: ${{ github.workspace }}/UX-styling.nvim
+          UX_CHROME_TEST_FILE: tests/styling_integration.lua
+        run: nvim --headless -u tests/minimal_init.lua -l scripts/run-test.lua
+
+      - name: Verify help tags
+        run: |
+          nvim --headless -u tests/minimal_init.lua -c "helptags doc" -c quit
+          git diff --exit-code -- doc/tags
+
+  macos-smoke:
+    name: macos-smoke (Neovim 0.12.2)
+    runs-on: macos-15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Check out pinned UX Foundation
+        uses: actions/checkout@v7
+        with:
+          repository: 777lotto/UX-foundation.nvim
+          ref: efdf0572e79564bdcb0c43c973bafb7324e9939a
+          path: UX-foundation.nvim
+
+      - name: Check out pinned UX Styling
+        uses: actions/checkout@v7
+        with:
+          repository: 777lotto/UX-styling.nvim
+          ref: a7342b42fe1065243ee5c900188aa3b40afa8352
+          path: UX-styling.nvim
+
+      - name: Install pinned Neovim
+        env:
+          NVIM_VERSION: v0.12.2
+          NVIM_ARM64_SHA256: eeddee1009734f9071266e6b1b8a70308cb60cbcc45f5e1c1023adc471450fee
+          NVIM_X86_64_SHA256: 728321db960a9b6af6c03881892a6abfd743bf759bc62d233f52fa1be64ace3c
+        run: |
+          case "$(uname -m)" in
+            arm64)
+              archive="nvim-macos-arm64.tar.gz"
+              checksum="$NVIM_ARM64_SHA256"
+              ;;
+            x86_64)
+              archive="nvim-macos-x86_64.tar.gz"
+              checksum="$NVIM_X86_64_SHA256"
+              ;;
+            *)
+              echo "Unsupported runner architecture: $(uname -m)" >&2
+              exit 1
+              ;;
+          esac
+          mkdir -p "$RUNNER_TEMP/nvim"
+          curl --fail --location --retry 3 \
+            "https://github.com/neovim/neovim/releases/download/$NVIM_VERSION/$archive" \
+            --output "$RUNNER_TEMP/nvim.tar.gz"
+          echo "$checksum  $RUNNER_TEMP/nvim.tar.gz" | shasum --algorithm 256 --check
+          tar --extract --gzip --strip-components=1 \
+            --file "$RUNNER_TEMP/nvim.tar.gz" --directory "$RUNNER_TEMP/nvim"
+          echo "$RUNNER_TEMP/nvim/bin" >> "$GITHUB_PATH"
+
+      - name: Compile every Lua file
+        run: nvim --headless --clean -l scripts/check-lua.lua .
+
+      - name: Run unit tests
+        env:
+          UX_CHROME_TEST_FILE: tests/unit.lua
+        run: nvim --headless -u tests/minimal_init.lua -l scripts/run-test.lua
+
+      - name: Run renderer fixtures
+        env:
+          UX_CHROME_TEST_FILE: tests/render.lua
+        run: nvim --headless -u tests/minimal_init.lua -l scripts/run-test.lua
+
+      - name: Run isolated smoke tests
+        env:
+          UX_CHROME_TEST_FILE: tests/smoke.lua
+        run: nvim --headless -u tests/minimal_init.lua -l scripts/run-test.lua
+
+      - name: Run pinned Foundation integration
+        env:
+          UX_FOUNDATION_ROOT: ${{ github.workspace }}/UX-foundation.nvim
+          UX_CHROME_TEST_FILE: tests/foundation_integration.lua
+        run: nvim --headless -u tests/minimal_init.lua -l scripts/run-test.lua
+
+      - name: Run pinned Styling discovery integration
+        env:
+          UX_FOUNDATION_ROOT: ${{ github.workspace }}/UX-foundation.nvim
+          UX_STYLING_ROOT: ${{ github.workspace }}/UX-styling.nvim
+          UX_CHROME_TEST_FILE: tests/styling_integration.lua
+        run: nvim --headless -u tests/minimal_init.lua -l scripts/run-test.lua
