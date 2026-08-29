@@ -1,5 +1,11 @@
 local M = {}
 
+local function supported(version)
+  return version.major > 0
+    or version.minor > 12
+    or (version.minor == 12 and version.patch >= 2)
+end
+
 function M.report()
   local chrome = require("ux_chrome")
   local state = chrome.state()
@@ -7,9 +13,7 @@ function M.report()
   local report = {
     version = chrome.version,
     neovim = vim.version().major .. "." .. vim.version().minor .. "." .. vim.version().patch,
-    neovim_supported = vim.version().major == 0
-      and vim.version().minor == 12
-      and vim.version().patch == 2,
+    neovim_supported = supported(vim.version()),
     foundation_available = foundation_ok and foundation.contract_version == 1,
     foundation_contract = foundation_ok and foundation.contract_version or nil,
     initialized = state.initialized,
@@ -27,10 +31,10 @@ function M.check()
   local report = M.report()
   vim.health.start("UX Chrome")
   local version = vim.version()
-  if version.major == 0 and version.minor == 12 and version.patch == 2 then
-    vim.health.ok("Neovim 0.12.2 (pinned supported target)")
+  if supported(version) then
+    vim.health.ok("Neovim " .. report.neovim .. " (supported; minimum 0.12.2)")
   else
-    vim.health.warn("Only Neovim 0.12.2 is currently claimed; running " .. report.neovim)
+    vim.health.error("Neovim 0.12.2 or newer is required; running " .. report.neovim)
   end
   if report.foundation_available then
     vim.health.ok("UX Foundation schema v1 is available")
