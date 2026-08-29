@@ -102,6 +102,12 @@ h.test("public facade exposes the complete documented API", function()
   end
 end)
 
+h.test("health accepts the supported Neovim compatibility floor and newer releases", function()
+  local report = require("ux_chrome").health()
+  h.truthy(report.neovim_supported,
+    "the current test runtime is newer than the 0.12.2 floor but health rejected it")
+end)
+
 h.test("manifest is deterministic callback-free schema-v1 data", function()
   local chrome = require("ux_chrome")
   local manifest = chrome.manifest()
