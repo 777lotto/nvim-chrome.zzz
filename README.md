@@ -12,7 +12,8 @@ never required at runtime.
 
 ## Requirements
 
-- Neovim 0.12.2; older and newer compatibility is not currently claimed
+- Neovim 0.12.2 or newer. The floor is exercised directly in Chrome CI and
+  the current nvim-config integration tests Neovim 0.12.4.
 - [UX-foundation.nvim](https://github.com/777lotto/UX-foundation.nvim) at the
   schema-v1 contract
 - a font containing the configured separator glyphs, or ASCII replacements
@@ -212,9 +213,11 @@ git diff --check
 git diff --exit-code -- doc/tags
 ```
 
-CI pins Neovim 0.12.2 on Linux and macOS, the promoted Foundation schema-v1
-commit, and the production Styling integration commit. These gates are required
-before release; this Unreleased work does not itself claim they have passed.
+CI pins the Neovim 0.12.2 compatibility floor on Linux and macOS, the promoted
+Foundation schema-v1 commit, and the production Styling integration commit.
+The nvim-config integration additionally exercises 0.12.4. These gates are
+required before release; this Unreleased work does not itself claim they have
+passed.
 
 Run `:help ux-chrome` for the in-editor reference.
 

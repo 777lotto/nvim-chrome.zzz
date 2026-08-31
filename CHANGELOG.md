@@ -23,6 +23,9 @@ and releases use Semantic Versioning.
 
 ### Fixed
 
+- Health and documentation now express the tested compatibility contract as
+  Neovim 0.12.2 or newer; 0.12.4 integration no longer produces a false
+  unsupported-version warning.
 - The Styling discovery test asserted that a whole-plugin generic preview
   borrowed the first component's `fixture_id`. UX Styling no longer does that,
   so the assertion now expects the plugin-derived `ux.chrome.preview.v1`.
