@@ -10,8 +10,8 @@
 
 ## Validation
 
-- [ ] I targeted `bluff`, or this is a `bluff` to `bet` promotion.
-- [ ] Commits retain configured signing.
+- [ ] I targeted the default `bluff` branch.
+- [ ] Commit provenance is explicit (human commits signed; brokered agent commits use the expected unsigned identity).
 - [ ] Lua compilation and all applicable named test suites pass on Neovim 0.12.2.
 - [ ] Foundation and Styling integration pass when affected.
 - [ ] No test loaded or mutated the live Neovim configuration.

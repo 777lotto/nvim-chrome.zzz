@@ -20,19 +20,21 @@ never required at runtime.
 
 ## Installation
 
-The production/default branch is `bet`; `bluff` is persistent integration.
+`bluff` is the default and only long-lived branch. Pin a signed release tag for
+an immutable installation, or let your plugin manager retain an exact tested
+`bluff` commit in its lockfile.
 
 With lazy.nvim:
 
 ```lua
 {
   "777lotto/UX-foundation.nvim",
-  branch = "bet",
+  branch = "bluff",
   lazy = false,
 },
 {
   "777lotto/UX-chrome.nvim",
-  branch = "bet",
+  branch = "bluff",
   dependencies = { "777lotto/UX-foundation.nvim" },
   opts = {},
 }
@@ -213,11 +215,18 @@ git diff --check
 git diff --exit-code -- doc/tags
 ```
 
-CI pins the Neovim 0.12.2 compatibility floor on Linux and macOS, the promoted
-Foundation schema-v1 commit, and the production Styling integration commit.
+CI pins the Neovim 0.12.2 compatibility floor on Linux and macOS, the tested
+Foundation schema-v1 commit, and the tested Styling integration commit.
 The nvim-config integration additionally exercises 0.12.4. These gates are
 required before release; this Unreleased work does not itself claim they have
 passed.
+
+Focused branches start from and merge into `bluff`. Signed `vX.Y.Z` tags and
+GitHub Releases mark tested `bluff` commits. Publishing a stable Release can
+notify `nvim-config` to test and pin that exact Chrome commit. The operator
+provisions the repository-scoped `NVIM_CONFIG_DISPATCH_TOKEN`; the
+credential-free ZemRip agent broker cannot read or write that secret, push a
+tag, or publish a Release.
 
 Run `:help ux-chrome` for the in-editor reference.
 
