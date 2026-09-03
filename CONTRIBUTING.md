@@ -6,13 +6,15 @@ addition to any manual screenshot.
 
 ## Branch model
 
-- `bet` is the production/default branch.
-- `bluff` is the persistent integration branch.
+- `bluff` is the default and only long-lived branch.
 - Short-lived branches start from and return to `bluff`.
-- A `bluff` to `bet` pull request promotes a verified milestone.
+- Releases are signed tags from tested `bluff` commits.
 
-Do not target `bet` directly for ordinary changes. Preserve the repository's
-configured commit and tag signing behavior.
+Preserve the repository's configured commit and tag signing behavior for human
+work. Brokered `zemrip-ai` commits use the expected unsigned agent identity.
+On that plane, pushes are limited to `agent/**`; workflow changes require an
+operator-approved one-use ticket, and tags, Releases, settings, and secrets
+remain operator-owned.
 
 ## Local checks
 

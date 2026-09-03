@@ -65,7 +65,7 @@ body:
     attributes:
       label: Checks
       options:
-        - label: I reproduced this on the current bet or bluff branch with Neovim 0.12.2.
+        - label: I reproduced this on the current bluff branch with Neovim 0.12.2.
           required: true
         - label: I identified whether the surface was auto, ux, or externally owned.
           required: true

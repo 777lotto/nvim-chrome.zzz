@@ -20,6 +20,13 @@ and releases use Semantic Versioning.
   smoke, Foundation-integration, and Styling-integration suites.
 - Public Lua APIs, user commands, health/debug reporting, Vim help, and M3/M4
   ownership-switch documentation.
+- A stable-release notification that asks `nvim-config` to test and pin the
+  exact tagged Chrome commit.
+
+### Changed
+
+- `bluff` is now the default and only long-lived branch; CI and contributor
+  guidance no longer retain the retired `bet` promotion path.
 
 ### Fixed
 
