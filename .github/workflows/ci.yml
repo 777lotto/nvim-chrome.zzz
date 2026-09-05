@@ -26,6 +26,9 @@ jobs:
         with:
           fetch-depth: 2
 
+      - name: Test automatic release policy
+        run: bash scripts/test-release-tested.sh
+
       - name: Reject whitespace errors
         run: |
           if git rev-parse --verify HEAD^ >/dev/null 2>&1; then
