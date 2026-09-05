@@ -20,7 +20,7 @@ never required at runtime.
 
 ## Installation
 
-`bluff` is the default and only long-lived branch. Pin a signed release tag for
+`bluff` is the default and only long-lived branch. Pin a release tag for
 an immutable installation, or let your plugin manager retain an exact tested
 `bluff` commit in its lockfile.
 
@@ -221,12 +221,14 @@ The nvim-config integration additionally exercises 0.12.4. These gates are
 required before release; this Unreleased work does not itself claim they have
 passed.
 
-Focused branches start from and merge into `bluff`. Signed `vX.Y.Z` tags and
-GitHub Releases mark tested `bluff` commits. Publishing a stable Release can
-notify `nvim-config` to test and pin that exact Chrome commit. The operator
-provisions the repository-scoped `NVIM_CONFIG_DISPATCH_TOKEN`; the
-credential-free ZemRip agent broker cannot read or write that secret, push a
-tag, or publish a Release.
+Successful push CI on the current `bluff` head automatically publishes a
+versioned GitHub Release and notifies `nvim-config` with that exact commit.
+CI creates unsigned tags, starting at `v0.1.0` and incrementing the patch
+version. Failed or superseded runs do not publish. The existing
+`NVIM_CONFIG_DISPATCH_TOKEN` repository secret enables notification; a missing
+secret fails visibly after publication. See [release automation](docs/releases.md)
+for retry behavior, versioning, and the distinction between plugin releases
+and configuration adoption.
 
 Run `:help ux-chrome` for the in-editor reference.
 

@@ -8,15 +8,18 @@ addition to any manual screenshot.
 
 - `bluff` is the default and only long-lived branch.
 - Short-lived branches start from and return to `bluff`.
-- Releases are signed tags from tested `bluff` commits.
+- CI publishes unsigned version tags and Releases from tested `bluff` commits.
+  See [automatic releases](docs/releases.md); human-created tags may still be signed.
 
 Preserve the repository's configured commit and tag signing behavior for human
 work. Brokered `zemrip-ai` commits use the expected unsigned agent identity.
 On that plane, pushes are limited to `agent/**`; workflow changes require an
-operator-approved one-use ticket, and tags, Releases, settings, and secrets
-remain operator-owned.
+operator-approved one-use ticket, and settings and secrets remain operator-owned.
 
 ## Local checks
+
+Run `bash scripts/test-release-tested.sh` to check release selection and retry
+behavior against local fixtures.
 
 Run from the repository root with Neovim 0.12.2:
 

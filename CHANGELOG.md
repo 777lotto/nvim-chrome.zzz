@@ -7,6 +7,12 @@ and releases use Semantic Versioning.
 
 ## [Unreleased]
 
+### Automation
+
+- Publish a versioned Release after successful push CI on the current `bluff`
+  commit and directly request its exact pin in `nvim-config`. Tags are created
+  by CI without a human signature; interrupted runs reuse the same release.
+
 ### Added
 
 - Initial UX Chrome implementation for buffer tabs, native tab pages,
