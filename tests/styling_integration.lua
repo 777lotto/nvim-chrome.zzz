@@ -132,4 +132,23 @@ h.test("Styling discovers Chrome as a distinct category with a generic preview",
   if not ok then error(err) end
 end)
 
+h.test("Styling edits shared pane defaults without a plugin-specific adapter", function()
+  cleanup()
+  foundation.setup({ load_active = false, core = true })
+  local panes = require("ux_chrome.panes")
+  local win = api.nvim_get_current_win()
+  panes.attach({ id = "fixture.document", role = "context", content = "plaintext", window = win })
+  styling.setup({ foundation = { load_active = false }, raw_browser = false })
+  local workspace = h.truthy(styling.open())
+  workspace:render()
+  h.truthy(tree_root(workspace.tree, "ux.chrome.panes"))
+  h.truthy(tree_root(workspace.tree, "ux.chrome.pane.fixture.document"))
+  h.truthy(workspace.transaction:stage("ux.chrome.panes/context/wrap/value", false))
+  workspace.dirty = true
+  h.equal(vim.wo[win].wrap, false)
+  h.truthy(styling.close())
+  h.equal(vim.wo[win].wrap, true)
+  cleanup()
+end)
+
 h.finish()

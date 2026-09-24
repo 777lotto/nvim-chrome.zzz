@@ -173,7 +173,8 @@ end
 function Controller:_normal_windows()
   local result = {}
   for _, win in ipairs(self.api.nvim_list_wins()) do
-    if self.api.nvim_win_is_valid(win) then
+    local panes = package.loaded["ux_chrome.panes"]
+    if self.api.nvim_win_is_valid(win) and not (panes and panes.owns(win)) then
       local ok, window_config = pcall(self.api.nvim_win_get_config, win)
       if ok and (not window_config.relative or window_config.relative == "") then result[#result + 1] = win end
     end

@@ -214,3 +214,6 @@ h.test("direct Foundation registration works without a profile or Styling", func
 end)
 
 h.finish()
+
+-- The shared panes use the same frozen schema and run on both CI platforms.
+dofile("tests/panes.lua")
