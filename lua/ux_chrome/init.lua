@@ -87,6 +87,11 @@ function M.refresh()
 end
 
 function M.teardown()
+  local panes = package.loaded["ux_chrome.panes"]
+  if panes then
+    local ok, err = panes.teardown()
+    if not ok then return false, err end
+  end
   if not runtime then return true end
   local current = runtime
   current.controller.tearing_down = true
@@ -102,6 +107,20 @@ function M.teardown()
     return false, err
   end
   runtime = nil
+  return true
+end
+
+-- Pane-only consumers do not initialize or acquire editor-wide surfaces.
+function M.attach(spec) return require("ux_chrome.panes").attach(spec) end
+function M.detach(window) return require("ux_chrome.panes").detach(window) end
+
+-- Internal ownership handoff before a pane captures its opening options.
+function M._prepare_pane(window)
+  if not runtime then return true end
+  for _, surface in ipairs({ "statusline", "winbar", "statuscolumn", "windows" }) do
+    local ok, err = runtime.controller:_release_window(window, surface, "explicit plugin pane")
+    if not ok then return false, err end
+  end
   return true
 end
 

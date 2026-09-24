@@ -6,6 +6,11 @@ statuscolumn and folds, split/window treatment, and a lightweight scrollbar.
 Its deterministic renderers perform no Git, GitHub, network, LSP, or other
 domain I/O.
 
+Chrome also provides [shared plugin panes](docs/panes.md): navigation, log,
+context, and input roles with Foundation-backed wrapping, selection, gutters,
+and colors. Markdown panes coordinate the optional render-markdown backend.
+This API works while editor-wide Chrome surfaces remain externally owned.
+
 Chrome registers directly with UX Foundation schema version 1. UX Foundation is
 required; UX Styling is an optional editor for the registered properties and is
 never required at runtime.
