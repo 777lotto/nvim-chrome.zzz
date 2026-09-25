@@ -113,9 +113,10 @@ Buff's navigation and Markdown context panes. Each keeps its native fallback
 when this optional API is absent. Domain content and row construction remain
 plugin-owned in this first increment.
 
-Next, extract shared row/header/empty-state helpers from these consumers based
-on demonstrated repetition. Extend layout policies with minimum widths and
-collapsible panes, keeping focus and application actions explicit.
+The [shared navigation components](components.md) provide row/header/empty-state
+helpers with Foundation settings and cached live redraw. Next, extend layout
+policies with minimum widths and collapsible panes, keeping focus and
+application actions explicit.
 
 Chrome's editor bars remain a planned part of the architecture. Its Bufferline
 and Lualine replacements can consume these same pane identities and roles to

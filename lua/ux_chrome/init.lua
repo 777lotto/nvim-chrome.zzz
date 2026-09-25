@@ -87,6 +87,11 @@ function M.refresh()
 end
 
 function M.teardown()
+  local components = package.loaded["ux_chrome.components"]
+  if components then
+    local ok, err = components.teardown()
+    if not ok then return false, err end
+  end
   local panes = package.loaded["ux_chrome.panes"]
   if panes then
     local ok, err = panes.teardown()

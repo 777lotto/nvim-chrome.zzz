@@ -173,6 +173,18 @@ optional force argument selects explicit ux ownership when enabling.
 ==============================================================================
 7. RENDERING                                                  *ux-chrome-render*
 
+Shared plugin navigation uses require("ux_chrome.components").context({id,
+window, width, redraw}). Its format({kind, text, prefix, count, depth}) method
+returns one line and a byte-indexed highlight span. Kinds are row, header,
+and empty. Plugins retain their action targets and application behavior.
+
+Foundation exposes padding, indent, gap, and truncation at
+ux.chrome.components/navigation/<setting>/value. Per-component overrides use
+ux.chrome.component.<id>/navigation/<setting>/value; -1 and "inherit" inherit
+numeric and truncation settings respectively. A redraw callback must rebuild
+presentation synchronously from cached content. Window closure releases it.
+See docs/components.md for the complete contract and lifecycle requirements.
+
 The tabline shows listed buffers with active, visible, inactive, modified,
 overflow, empty, and native-tab-page states. The statusline shows mode,
 filename, modified/read-only state, encoding, file format, filetype, progress,
