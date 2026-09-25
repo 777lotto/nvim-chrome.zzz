@@ -217,3 +217,4 @@ h.finish()
 
 -- The shared panes use the same frozen schema and run on both CI platforms.
 dofile("tests/panes.lua")
+dofile("tests/components.lua")

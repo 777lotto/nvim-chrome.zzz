@@ -15,6 +15,8 @@ and releases use Semantic Versioning.
 
 ### Added
 
+- Shared navigation row, header, and empty-state helpers with Foundation-backed
+  spacing, truncation, colors, per-component overrides, and reversible live redraw.
 - Initial UX Chrome implementation for buffer tabs, native tab pages,
   statusline, winbar breadcrumbs, statuscolumn and fold presentation, split and
   active-window treatment, and a lightweight scrollbar.

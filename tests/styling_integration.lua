@@ -57,12 +57,21 @@ h.test("Styling discovers Chrome as a distinct category with a generic preview",
     }
     foundation.setup(foundation_opts)
     h.truthy(chrome.setup({ foundation = foundation_opts, ownership = all_external() }))
+    require("ux_chrome.components").register("test.navigation")
     h.truthy(h.find_registration(foundation, "ux.chrome"),
       "Chrome did not register before Styling was opened")
 
     styling.setup({ foundation = foundation_opts, raw_browser = false })
     local workspace = h.truthy(styling.open(), "Styling workspace failed to open")
     workspace:render()
+
+    h.truthy(tree_root(workspace.tree, "ux.chrome.components"), "Styling omitted shared components")
+    h.truthy(tree_root(workspace.tree, "ux.chrome.component.test.navigation"), "Styling omitted component overrides")
+    local component_tx = workspace.transaction
+    assert(component_tx:stage("ux.chrome.components/navigation/padding/value", 4))
+    h.equal(require("ux_chrome.components").inspect("test.navigation").padding, 4)
+    assert(component_tx:revert())
+    h.equal(require("ux_chrome.components").inspect("test.navigation").padding, 1)
 
     local chrome_root = h.truthy(tree_root(workspace.tree, "ux.chrome"),
       "Styling omitted direct ux.chrome registration")
