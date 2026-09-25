@@ -105,6 +105,13 @@ windows discards their handles. Switching buffers releases the old attachment.
 `chrome.teardown()` includes this operation. Editor-wide Chrome treatment
 yields an explicitly attached pane rather than overwriting it on refresh.
 
+## Shared output layout
+
+The [bottom drawer](drawer.md) builds on these presentation roles to provide a
+standard output location, per-tab window lifecycle, source switching, retention,
+and follow/filter controls. Existing plugin layouts continue to use `attach()`;
+plugins that want the shared output location register a drawer provider.
+
 ## Adoption and roadmap
 
 The first consumers are Agent Manager's navigation, conversation, activity,

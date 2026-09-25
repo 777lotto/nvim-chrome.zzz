@@ -95,6 +95,7 @@ do
   add("statusline", "component_separator", "Component Separator", "statusline.component_separator", spec, value)
   for _, item in ipairs({
     { "show_mode", "Show Mode", "statusline.show_mode" },
+    { "show_drawer", "Show Output Drawer", "statusline.show_drawer" },
     { "show_encoding", "Show Encoding", "statusline.show_encoding" },
     { "show_filetype", "Show Filetype", "statusline.show_filetype" },
     { "show_ruler", "Show Ruler", "statusline.show_ruler" },

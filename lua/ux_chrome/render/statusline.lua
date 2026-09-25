@@ -41,6 +41,12 @@ local function right_items(ctx, values)
   if common.value(values, "statusline.show_filetype", true) and ctx.filetype and ctx.filetype ~= "" then
     items[#items + 1] = { priority = 3, text = ctx.filetype, state = "filetype" }
   end
+  if ctx.drawer and common.value(values, "statusline.show_drawer", true) then
+    local label = "Logs"
+    if ctx.drawer.unread > 0 then label = label .. " " .. ctx.drawer.unread end
+    if ctx.drawer.errors > 0 then label = label .. " !" .. ctx.drawer.errors end
+    items[#items + 1] = { priority = 4, text = label, state = "drawer", click = true }
+  end
   if common.value(values, "statusline.show_progress", true) then
     local total = math.max(1, tonumber(ctx.total_lines) or 1)
     local line = util.clamp(tonumber(ctx.line) or 1, 1, total)
@@ -161,7 +167,9 @@ function M.render(ctx, values)
   end
   for index, item in ipairs(right) do
     if index > 1 then add(segments, "UXChromeStatusInfo", separator, "component_separator") end
+    if item.click then segments[#segments + 1] = common.control("%@v:lua.require'ux_chrome.drawer'.click@") end
     add(segments, item.group or "UXChromeStatusInfo", item_padding .. item.text .. item_padding, item.state)
+    if item.click then segments[#segments + 1] = common.control("%T") end
   end
   return common.result(segments, { active = true, mode = mode_id, right_items = right })
 end

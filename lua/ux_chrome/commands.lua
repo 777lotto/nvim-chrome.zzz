@@ -28,6 +28,28 @@ local function command(name, callback, opts)
 end
 
 function M.setup()
+  local drawer = require("ux_chrome.drawer")
+  drawer.setup()
+  local function provider_complete(prefix)
+    local result = {}
+    for _, item in ipairs(drawer.providers()) do
+      if item.id:sub(1, #prefix) == prefix then result[#result + 1] = item.id end
+    end
+    return result
+  end
+  command("UXChromeDrawerOpen", function(args)
+    run(function() return drawer.open(args.args ~= "" and args.args or nil, { focus = not args.bang }) end)
+  end, { nargs = "?", bang = true, complete = provider_complete, desc = "Open output drawer (! preserves focus)" })
+  for _, item in ipairs({
+    { "Toggle", drawer.toggle }, { "Close", drawer.close }, { "Clear", drawer.clear },
+    { "Follow", drawer.follow }, { "Refresh", drawer.refresh },
+  }) do
+    command("UXChromeDrawer" .. item[1], function() run(item[2]) end,
+      { desc = item[1] .. " output drawer" })
+  end
+  command("UXChromeDrawerSource", drawer.choose, { desc = "Select output source" })
+  command("UXChromeDrawerFilter", function(args) run(function() return drawer.filter(args.args) end) end,
+    { nargs = "?", desc = "Filter output (no argument resets)" })
   command("UXChromeEnable", function(args)
     run(function() return require("ux_chrome").enable(args.args, args.bang) end)
   end, { nargs = "?", bang = true, complete = complete, desc = "Enable a UX Chrome surface" })

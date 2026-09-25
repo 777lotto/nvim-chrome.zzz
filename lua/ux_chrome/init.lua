@@ -87,6 +87,8 @@ function M.refresh()
 end
 
 function M.teardown()
+  local drawer = package.loaded["ux_chrome.drawer"]
+  if drawer then drawer.teardown() end
   local components = package.loaded["ux_chrome.components"]
   if components then
     local ok, err = components.teardown()
