@@ -7,6 +7,13 @@ and releases use Semantic Versioning.
 
 ## [Unreleased]
 
+- Add a shared bottom output drawer with per-tab height/source memory, native
+  mouse resizing, a clickable Logs status item, unread/error counts, follow,
+  filtering, and bounded provider output. Include a Messages snapshot source,
+  commands, and Foundation-backed log presentation.
+- Add `mise run verify` and attached-UI coverage for drawer mouse interactions.
+
+
 ### Automation
 
 - Publish a versioned Release after successful push CI on the current `bluff`

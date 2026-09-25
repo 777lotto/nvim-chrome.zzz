@@ -1,0 +1,3 @@
+[tasks.verify]
+description = "Verify Lua, renderers, integration, release policy and help tags"
+run = "nvim --headless --clean -l scripts/verify.lua"

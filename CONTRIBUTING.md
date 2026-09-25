@@ -18,6 +18,11 @@ operator-approved one-use ticket, and settings and secrets remain operator-owned
 
 ## Local checks
 
+`mise run verify` runs the complete gate. Set `UX_FOUNDATION_ROOT` and
+`UX_STYLING_ROOT` to read-only dependency checkouts; by default the verifier
+looks for sibling `UX-foundation.nvim` and `UX-styling.nvim` directories.
+Foundation integration includes the drawer lifecycle and attached-UI mouse tests.
+
 Run `bash scripts/test-release-tested.sh` to check release selection and retry
 behavior against local fixtures.
 

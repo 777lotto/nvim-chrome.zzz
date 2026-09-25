@@ -6,6 +6,11 @@ statuscolumn and folds, split/window treatment, and a lightweight scrollbar.
 Its deterministic renderers perform no Git, GitHub, network, LSP, or other
 domain I/O.
 
+Chrome includes a [shared bottom drawer](docs/drawer.md) for plugin output.
+Click **Logs** in the statusline or run `:UXChromeDrawerToggle`; resize the upper
+divider with the mouse. The built-in Messages view is available immediately,
+and plugins can register bounded log sources with shared follow/filter controls.
+
 Chrome also provides [shared plugin panes](docs/panes.md): navigation, log,
 context, and input roles with Foundation-backed wrapping, selection, gutters,
 and colors. Markdown panes coordinate the optional render-markdown backend.
@@ -206,6 +211,14 @@ capability. `:UXChromeDebug` and `require("ux_chrome").debug()` expose a
 defensive snapshot without returning executable callbacks.
 
 ## Development
+
+Run the complete local gate with dependency checkouts available:
+
+```sh
+UX_FOUNDATION_ROOT=/path/to/nvim-foundation UX_STYLING_ROOT=/path/to/nvim-styler mise run verify
+```
+
+Individual checks:
 
 ```sh
 nvim --headless --clean -l scripts/check-lua.lua .

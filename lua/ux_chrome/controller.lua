@@ -631,6 +631,7 @@ function Controller:_statusline_context()
     line = cursor[1],
     column = cursor[2] + 1,
     total_lines = self.api.nvim_buf_line_count(buf),
+    drawer = package.loaded["ux_chrome.drawer"] and require("ux_chrome.drawer").status(self.api.nvim_win_get_tabpage(win)),
     width = self:render_values()["statusline.placement"] == "global"
         and vim.o.columns or self.api.nvim_win_get_width(win),
   }
